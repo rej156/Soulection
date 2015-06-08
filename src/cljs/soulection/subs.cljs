@@ -1,8 +1,8 @@
-(ns dissertation.subs
+(ns soulection.subs
   (:require-macros [reagent.ratom :refer [reaction]])
   (:require [re-frame.core :refer [subscribe register-sub]]
-            [dissertation.components.home.view :as home]
-            [dissertation.components.next-page.view :as next-page]))
+            [soulection.components.home.view :as home]
+            [soulection.components.next-page.view :as next-page]))
 
 (defn error-page []
   [:div [:h1 "404"]])

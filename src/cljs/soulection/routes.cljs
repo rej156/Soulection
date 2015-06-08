@@ -1,9 +1,9 @@
-(ns dissertation.routes
+(ns soulection.routes
   (:require [secretary.core :as secretary :include-macros true :refer-macros [defroute]]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
             [re-frame.core :refer [subscribe dispatch]]
-            [dissertation.components.home.view :as home])
+            [soulection.components.home.view :as home])
   (:import goog.History))
 
 (defn hook-browser-navigation! []

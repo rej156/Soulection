@@ -1,4 +1,4 @@
-(ns dissertation.components.next-page.view
+(ns soulection.components.next-page.view
   (:require [re-frame.core :refer [dispatch subscribe dispatch-sync]]))
 
 (defn component []

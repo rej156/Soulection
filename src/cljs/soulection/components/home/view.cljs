@@ -1,4 +1,4 @@
-(ns dissertation.components.home.view
+(ns soulection.components.home.view
   (:require [re-frame.core :refer [dispatch subscribe dispatch-sync]]))
 
 (defn component []

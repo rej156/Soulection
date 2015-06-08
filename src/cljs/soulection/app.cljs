@@ -1,9 +1,9 @@
-(ns dissertation.app
+(ns soulection.app
   (:require [re-frame.core :refer [dispatch subscribe dispatch-sync]]
             [reagent.core :as reagent :refer [atom]]
-            [dissertation.handlers]
-            [dissertation.subs]
-            [dissertation.routes :refer [init-routes]]))
+            [soulection.handlers]
+            [soulection.subs]
+            [soulection.routes :refer [init-routes]]))
 
 (defn my-component []
   (let [component (subscribe [:component-to-render])]

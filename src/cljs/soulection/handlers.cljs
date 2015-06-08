@@ -1,4 +1,4 @@
-(ns dissertation.handlers
+(ns soulection.handlers
   (:require [re-frame.core :refer [dispatch register-handler path trim-v after]]))
 
 (register-handler

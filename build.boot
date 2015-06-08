@@ -41,7 +41,7 @@
   (task-options! cljs {:optimizations :none
                        :unified-mode true
                        :source-map true}
-                 reload {:on-jsload 'dissertation.app/init})
+                 reload {:on-jsload 'soulection.app/init})
   identity)
 
 (deftask dev
