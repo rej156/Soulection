@@ -3,14 +3,22 @@
             [reagent.core :as reagent :refer [atom]]
             [soulection.handlers]
             [soulection.subs]
-            [soulection.routes :refer [init-routes]]))
+            [soulection.routes :refer [init-routes]]
+            [soulection.components.nav.view :refer [nav]]))
 
 (defn my-component []
   (let [component (subscribe [:component-to-render])]
     (fn []
       (if-let [main-component @component]
-        [main-component]))
-  ))
+        [:header.bg-cover
+         {:style {:background-image
+                  "url(https://d262ilb51hltx0.cloudfront.net/max/2000/1*DZwdGMaeu-rvTroJYui6Uw.jpeg)"
+                  :min-height "100vh"}}
+
+         [nav]
+         [main-component]
+         ]))
+    ))
 
 (defn calling-component []
   (reagent/create-class
