@@ -9,8 +9,7 @@
   (let [component (subscribe [:component-to-render])]
     (fn []
       (if-let [main-component @component]
-        [main-component])
-      )
+        [main-component]))
   ))
 
 (defn calling-component []
