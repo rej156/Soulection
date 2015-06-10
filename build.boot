@@ -8,7 +8,7 @@
                  [secretary "1.2.3"]
 		         [re-frame "0.4.1"]
                  [reagent "0.5.0"]
-                 [reagent-forms "0.5.1"]])
+                 [re-com "0.5.4"]])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
