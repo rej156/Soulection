@@ -1,6 +1,7 @@
 (ns example.my-app
   (:require
      [clojure.string     :as str]
+     [clojure.java.io :as io]
      [ring.middleware.defaults :refer [site-defaults]]
      [compojure.core     :as comp :refer (defroutes GET POST)]
      [compojure.route    :as route]
@@ -59,6 +60,9 @@
 
 (defroutes my-routes
   (GET  "/"      req (landing-pg-handler req))
+  (GET "/index" req (-> "index.html"
+                        io/resource
+                        slurp))
   ;;
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
