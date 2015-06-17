@@ -2,12 +2,14 @@
  :source-paths   #{"src/clj" "src/cljs"}
  :dependencies '[[adzerk/boot-cljs      "0.0-3269-2" :scope "test"]
                  [adzerk/boot-reload    "0.2.6"      :scope "test"]
+                 [adzerk/boot-cljs-repl "0.1.10-SNAPSHOT" :scope "test"]
                  [environ "1.0.0"]
                  [danielsz/boot-environ "0.0.3"]
                  [org.danielsz/system "0.1.8"]
-                 [org.clojure/clojure       "1.7.0-RC1"]
+                 ;; [org.clojure/clojure       "1.7.0-RC1"]
+                 ;;[org.clojure/clojurescript "0.0-3308"]
                  [org.clojure/tools.nrepl "0.2.10"]
-           
+
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
 
@@ -29,6 +31,7 @@
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
+ '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
  '[reloaded.repl :refer [init start stop go reset]]
  '[example.systems :refer [dev-system]]
  '[danielsz.boot-environ :refer [environ]]
@@ -38,9 +41,11 @@
   "Run a restartable system in the Repl"
   []
   (comp
-   (environ :env {:http-port 3019})
+   (environ :env {:http-port 3000})
    (watch)
    (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])
+   (cljs-repl)
    (reload)
    (cljs :source-map true)
-   (repl :server true)))
+   ;; (repl :server true)
+   ))
