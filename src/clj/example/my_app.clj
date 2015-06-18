@@ -46,18 +46,20 @@
    [:p [:input#username {:type :text :placeholder "username"}]
     [:input#password {:type :password :placeholder "password"}]
     [:button#btn-login {:type "button"} "Secure login!"]]
+   [:button#logout {:type "button"} "Logout"]
+   [:button#chkid {:type "button"} "Checkid"]
    [:script {:src "main.js"}] ; Include our cljs target
    ))
-
-(defn logout!
-  [req]
-  (let [{:keys [session params]} req]
-    {:status 200 :session (assoc session {})}))
 
 (def authdata
   "Needs to be buddy salted and persisted!"
   {:admin {:password "adminpass"
            :uid "101"}})
+
+(defn logout!
+  [req]
+  (let [{:keys [session params]} req]
+    {:status 200 :session (assoc session :uid nil)}))
 
 (defn login!
   "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
@@ -88,7 +90,7 @@
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
   (POST "/login" req (login! req))
-  (GET "/logout" req (logout! req))
+  (POST "/logout" req (logout! req))
   ;;
   (route/not-found "<h1>Page not found</h1>"))
 
@@ -130,6 +132,15 @@
 
 ;; Add your (defmethod event-msg-handler <event-id> [ev-msg] <body>)s here...
 
+(defmethod event-msg-handler :user/chkid
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        uid     (:uid     session)]
+    ;;(assoc session [:uid] nil)
+    (debugf (pr-str uid))
+    (when ?reply-fn
+      (?reply-fn {:your-assigned-uid uid}))
+    ))
 
 ;;;; Example: broadcast server>user
 

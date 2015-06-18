@@ -83,8 +83,6 @@
                          (if (str/blank? username)
                            (js/alert "Please enter a user-id first")
                            (do
-                             (debugf "Logging in with user-id %s" user-id)
-
             ;;; Use any login procedure you'd like. Here we'll trigger an Ajax
             ;;; POST request that resets our server-side session. Then we ask
             ;;; our channel socket to reconnect, thereby picking up the new
@@ -97,7 +95,9 @@
                                                         :csrf-token (:csrf-token @chsk-state)}}
                                               (fn [ajax-resp]
                                                 (debugf "Ajax login response: %s" ajax-resp)
-                                                (let [login-successful? true ; Your logic here
+                                                (let [login-successful? (= 200
+                                                                           (:?status
+                                              ajax-resp)) ; Your logic here
                                                       ]
                                                   (if-not login-successful?
                                                     (debugf "Login failed")
@@ -105,8 +105,31 @@
                                                       (debugf "Login successful")
                                                       (sente/chsk-reconnect! chsk))))))))))))
 
+(when-let [target-el (.getElementById js/document "logout")]
+  (.addEventListener target-el "click"
+                     (fn [ev]
+                       (debugf "Logout Button was clicked")
+                       (sente/ajax-call "/logout"
+                                        {:method :post
+                                         :params {:csrf-token (:csrf-token @chsk-state)}}
+                                        (fn [ajax-resp]
+                                          (debugf "Ajax login response: %s"
+                                                  ajax-resp)
+                                          (let [logout-successful? (= 200
+                                                                      (:?status
+                                                                       ajax-resp))]
+                                            (if-not logout-successful?
+                                              (debugf "Logout failed")
+                                              (.alert js/window "Logged out!"))))))))
+
+(when-let [target-el (.getElementById js/document "chkid")]
+  (.addEventListener target-el "click"
+                     (fn [ev]
+                       (debugf "Checking server id!")
+                       (chsk-send! [:user/chkid {:had-a-callback? "expected"}] 5000 (fn [cb-reply] (debugf "Callback reply: %s" cb-reply))))))
+
 (def router_ (atom nil))
-(defn  stop-router! [] (when-let [stop-f @router_] (stop-f)))
+(defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
 (defn start-router! []
   (stop-router!)
   (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
