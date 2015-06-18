@@ -58,11 +58,14 @@
     (debugf "Login request: %s" params)
     {:status 200 :session (assoc session :uid user-id)}))
 
+(defn index-pg-handler [req]
+  (-> "index.html"
+      io/resource
+      slurp))
+
 (defroutes my-routes
   (GET  "/"      req (landing-pg-handler req))
-  (GET "/index" req (-> "index.html"
-                        io/resource
-                        slurp))
+  (GET "/index" req (index-pg-handler req))
   ;;
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
@@ -85,18 +88,18 @@
 
 ;;;; Routing handlers
 
-   ;; So you'll want to define one server-side and one client-side
-   ;; (fn event-msg-handler [ev-msg]) to correctly handle incoming events. How you
-   ;; actually do this is entirely up to you. In this example we use a multimethod
-   ;; that dispatches to a method based on the `event-msg`'s event-id. Some
-   ;; alternatives include a simple `case`/`cond`/`condp` against event-ids, or
-   ;; `core.match` against events.
+;; So you'll want to define one server-side and one client-side
+;; (fn event-msg-handler [ev-msg]) to correctly handle incoming events. How you
+;; actually do this is entirely up to you. In this example we use a multimethod
+;; that dispatches to a method based on the `event-msg`'s event-id. Some
+;; alternatives include a simple `case`/`cond`/`condp` against event-ids, or
+;; `core.match` against events.
 
-   (defmulti event-msg-handler :id) ; Dispatch on event-id
-   ;; Wrap for logging, catching, etc.:
-   (defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
-     (debugf "Event: %s" event)
-     (event-msg-handler ev-msg))
+(defmulti event-msg-handler :id) ; Dispatch on event-id
+;; Wrap for logging, catching, etc.:
+(defn     event-msg-handler* [{:as ev-msg :keys [id ?data event]}]
+  (debugf "Event: %s" event)
+  (event-msg-handler ev-msg))
 
 (defmethod event-msg-handler :default ; Fallback
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
@@ -114,19 +117,19 @@
 ;; As an example of push notifications, we'll setup a server loop to broadcast
 ;; an event to _all_ possible user-ids every 10 seconds:
 (defn start-broadcaster! []
-    (go-loop [i 0]
-      (<! (async/timeout 10000))
-      (println (format "Broadcasting server>user: %s" @(:connected-uids (:sente system))))
-      (doseq [uid (:any @(:connected-uids (:sente system)))]
-        ((:chsk-send! (:sente system)) uid
-         [:some/broadcast
-          {:what-is-this "A broadcast pushed from server"
-           :how-often    "Every 10 seconds"
-           :to-whom uid
-           :i i}]))
-      (recur (inc i))))
+  (go-loop [i 0]
+    (<! (async/timeout 10000))
+    (println (format "Broadcasting server>user: %s" @(:connected-uids (:sente system))))
+    (doseq [uid (:any @(:connected-uids (:sente system)))]
+      ((:chsk-send! (:sente system)) uid
+       [:some/broadcast
+        {:what-is-this "A broadcast pushed from server"
+         :how-often    "Every 10 seconds"
+         :to-whom uid
+         :i i}]))
+    (recur (inc i))))
 
-; Note that this'll be fast+reliable even over Ajax!:
+                                        ; Note that this'll be fast+reliable even over Ajax!:
 (defn test-fast-server>User-pushes []
   (doseq [uid (:any @(:connected-uids (:sente system)))]
     (doseq [i (range 100)]
