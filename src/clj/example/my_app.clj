@@ -43,20 +43,39 @@
    [:hr]
    [:h2 "Login with a user-id"]
    [:p  "The server can use this id to send events to *you* specifically."]
-   [:p [:input#input-login {:type :text :placeholder "User-id"}]
+   [:p [:input#username {:type :text :placeholder "username"}]
+    [:input#password {:type :password :placeholder "password"}]
     [:button#btn-login {:type "button"} "Secure login!"]]
    [:script {:src "main.js"}] ; Include our cljs target
    ))
+
+(defn logout!
+  [req]
+  (let [{:keys [session params]} req]
+    {:status 200 :session (assoc session {})}))
+
+(def authdata
+  "Needs to be buddy salted and persisted!"
+  {:admin {:password "adminpass"
+           :uid "101"}})
 
 (defn login!
   "Here's where you'll add your server-side login/auth procedure (Friend, etc.).
   In our simplified example we'll just always successfully authenticate the user
   with whatever user-id they provided in the auth request."
   [ring-request]
+  ;; (let [{:keys [session params]} ring-request
+  ;;       {:keys [user-id]} params]
+  ;;   (debugf "Login request: %s" params)
+  ;;   {:status 200 :session (assoc session :uid user-id)})
   (let [{:keys [session params]} ring-request
-        {:keys [user-id]} params]
-    (debugf "Login request: %s" params)
-    {:status 200 :session (assoc session :uid user-id)}))
+        {:keys [username]} params
+        {:keys [password]} params
+        found-password (get-in authdata [(keyword username) :password])]
+    (if (and found-password (= found-password password))
+      (let [user-id (get-in authdata [(keyword username) :uid])]
+        {:status 200 :session (assoc session :uid user-id)})
+      )))
 
 (defn index-pg-handler [req]
   (-> "index.html"
@@ -66,10 +85,10 @@
 (defroutes my-routes
   (GET  "/"      req (landing-pg-handler req))
   (GET "/index" req (index-pg-handler req))
-  ;;
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
   (POST "/login" req (login! req))
+  (GET "/logout" req (logout! req))
   ;;
   (route/not-found "<h1>Page not found</h1>"))
 
