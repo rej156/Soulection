@@ -1,4 +1,9 @@
 * Sente example app
+** How to setup?
+
+Install boot, maven, boot-datomic locally to maven, datomic transactor jar
+locally via maven.
+
 ** What is this?
 
 The [[https://github.com/ptaoussanis/sente/tree/master/example-project][example app]] from Sente, but for [[https://github.com/danielsz/system][system]] (componentized and bootified).
@@ -10,4 +15,4 @@ Fire the Boot pipeline from the command line.
 $ boot dev
 #+END_SRC
 
-Then point your browser to [[http://localhost:3019]]
+Then point your browser to [[http://localhost:30]]00
