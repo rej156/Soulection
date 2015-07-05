@@ -9,6 +9,7 @@
      [clojure.core.async :as async  :refer (<! <!! >! >!! put! chan go go-loop)]
      [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
      [taoensso.sente     :as sente]
+     [datomic.api :as d]
 
    ;;; ---> Choose (uncomment) a supported web server and adapter <---
 
@@ -175,3 +176,8 @@
 ;; #+clj (start!) ; Server-side auto-start disabled for LightTable, etc.
 (comment (start!)
          (test-fast-server>user-pushes))
+
+;;;; Datomic testing
+
+(def conn (:conn (:datomic-db system)))
+(def db (d/db conn))

@@ -7,8 +7,9 @@
  :dependencies '[[adzerk/boot-cljs      "0.0-3269-2" :scope "test"]
                  [adzerk/boot-reload    "0.2.6"      :scope "test"]
                  [adzerk/boot-cljs-repl "0.1.10-SNAPSHOT" :scope "test"]
-                 ;;Datomic
+                 ;;Datomic deps, requires datomic transactor and boot-datomic to be installed locally via maven
                  [tailrecursion/boot-datomic     "0.1.0-SNAPSHOT"]
+                 [com.datomic/datomic-pro "0.9.5186"]
                  ;;[ch.qos.logback/logback-classic "1.0.1"]
 
                  [environ "1.0.0"]
@@ -50,8 +51,9 @@
   "Run a restartable system in the Repl"
   []
   (comp
-   (environ :env {:http-port 3000})
-   (speak)
+  (environ :env {:http-port 3000
+                 :db-url "datomic:dev://localhost:4334/soulection"
+                 })
    (datomic :license-key "Grh/3Awg3nZwCMtgXmcp24WpK4N1GdF5e/nMvi66bOkTysUpDwYejShryL+9TAUU5PYYBBye0tHI+gr7WEHGEcPeSp2YZNdAYsJmgP6MH/5Njzj24s0ixytQifVVUIbC05N+bvyhXzWC3NXcpUkslDfYVbV4KWhtDTQbolXhUZvG573AfzVP//tpRG3yqzakI+GtEMVjBe2gqCQXtBC1YZxW9RzzLofYSdBIuvDrEq1OgxN5AKdRPiZZZIrIMr9wCuCuEy5BE/q6AfVp1XKgK1CKJBHEfYkG3NTKtfDXvzWF8fzWoqfHubiuvi69PCiJDKh0c/ztd2lhkXi7Qkddpw==")
    (watch)
    (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])
@@ -60,3 +62,5 @@
    (cljs :source-map true)
    ;; (repl :server true)
    ))
+
+;;Must create prod boot task with prod-system
