@@ -20,6 +20,7 @@
 
                  ;; ClojureScript Deps
                  [re-frame "0.4.1"]
+                 [secretary "1.2.3"]
 
                  [org.clojure/tools.nrepl "0.2.10"]
 
