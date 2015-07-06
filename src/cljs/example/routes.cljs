@@ -20,4 +20,6 @@
     (dispatch [:render-component :home]))
   (defroute "/next-page" []
     (dispatch [:render-component :next-page]))
+  (defroute "/register" []
+    (dispatch [:render-component :register]))
   (hook-browser-navigation!))

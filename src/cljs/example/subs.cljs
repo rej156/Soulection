@@ -2,7 +2,8 @@
   (:require-macros [reagent.ratom :refer [reaction]])
   (:require [re-frame.core :refer [subscribe register-sub]]
             [example.components.home.view :as home]
-            [example.components.next-page.view :as next-page]))
+            [example.components.next-page.view :as next-page]
+            [example.components.register.view :as register]))
 
 (defn error-page []
   [:div [:h1 "404"]])
@@ -14,4 +15,5 @@
     (condp = (:component @db)
       :home home/component
       :next-page next-page/component
+      :register register/component
       (error-page)))))
