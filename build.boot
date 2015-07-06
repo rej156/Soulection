@@ -54,15 +54,15 @@
   "Run a restartable system in the Repl"
   []
   (comp
-  (environ :env {:http-port 3000
+   (environ :env {:http-port 3000
                  :db-url "datomic:dev://localhost:4334/soulection"
                  })
    (datomic :license-key "Grh/3Awg3nZwCMtgXmcp24WpK4N1GdF5e/nMvi66bOkTysUpDwYejShryL+9TAUU5PYYBBye0tHI+gr7WEHGEcPeSp2YZNdAYsJmgP6MH/5Njzj24s0ixytQifVVUIbC05N+bvyhXzWC3NXcpUkslDfYVbV4KWhtDTQbolXhUZvG573AfzVP//tpRG3yqzakI+GtEMVjBe2gqCQXtBC1YZxW9RzzLofYSdBIuvDrEq1OgxN5AKdRPiZZZIrIMr9wCuCuEy5BE/q6AfVp1XKgK1CKJBHEfYkG3NTKtfDXvzWF8fzWoqfHubiuvi69PCiJDKh0c/ztd2lhkXi7Qkddpw==")
    (watch)
    (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])
    (cljs-repl)
-   (reload)
-   (cljs :source-map true)
+   (reload :on-jsload 'example.app/init)
+   (cljs :optimizations :none :unified-mode true :source-map true)
    ;; (repl :server true)
    ))
 

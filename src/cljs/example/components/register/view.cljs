@@ -1,12 +1,9 @@
-(ns example.components.nav.view
+(ns example.components.register.view
   (:require [re-frame.core :refer [dispatch subscribe dispatch-sync]]))
 
-(defn nav []
+(defn component []
   (let [x 1]
     (fn []
-      [:nav.cleafix.py3.px1
-       [:a.button.button-transparent.h1.white {:href "#/next-page"} "LOGO"]
-       [:a.button.button-transparent.right.p2.white {:href "#/next-page"} "MENU"]
-       [:a.button.button-transparent.right.p2.white {:href "#/next-page"} "LOGIN"]
-       [:a.button.button-transparent.right.p2.white {:href "#/next-page"} "JOIN"]
-       ])))
+      [:div.register
+       [:h1.white "Register-page"]
+       [:a {:href "#/home"} "Click me to render the homepage!"]])))

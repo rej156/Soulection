@@ -34,4 +34,4 @@
   (reagent/render-component [calling-component]
                             (.getElementById js/document "app")))
 
-;;(init)
+(init)
