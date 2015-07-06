@@ -17,14 +17,16 @@
                  [org.danielsz/system "0.1.8"]
                  ;; [org.clojure/clojure       "1.7.0-RC2"]
                  ;;[org.clojure/clojurescript "0.0-3308"]
+
+                 ;; ClojureScript Deps
+                 [re-frame "0.4.1"]
+
                  [org.clojure/tools.nrepl "0.2.10"]
 
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [com.taoensso/sente        "1.5.0-RC2"] ; <--- Sente
+                 [com.taoensso/sente        "1.5.0"]
 
-   ;;; ---> Choose (uncomment) a supported web server <---
                  [http-kit                  "2.1.19"]
-                 ;; [org.immutant/web       "2.0.0-beta2"]
 
                  [ring                      "1.4.0-RC1"]
                  [ring/ring-defaults        "0.1.5"] ; Includes `ring-anti-forgery`, etc.
