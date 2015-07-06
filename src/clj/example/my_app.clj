@@ -143,6 +143,16 @@
       (?reply-fn {:your-assigned-uid uid}))
     ))
 
+(defmethod event-msg-handler :example/button2
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        uid     (:uid     session)]
+    ;;(assoc session [:uid] nil)
+    (debugf (pr-str uid))
+    (when ?reply-fn
+      (?reply-fn {:success!!-original-event-from-client event}))
+    ))
+
 ;;;; Example: broadcast server>user
 
 ;; As an example of push notifications, we'll setup a server loop to broadcast

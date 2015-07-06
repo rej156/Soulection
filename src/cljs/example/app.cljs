@@ -25,7 +25,7 @@
   (reagent/create-class
    {:component-will-mount #(do
                              (init-routes)
-                             ;; (init-websocket)
+                             (init-websocket)
                              )
     :reagent-render #(my-component)}))
 
