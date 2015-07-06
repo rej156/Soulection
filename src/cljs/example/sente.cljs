@@ -1,4 +1,4 @@
-(ns example.my-app
+(ns example.sente
   (:require
    [clojure.string  :as str]
    [cljs.core.async :as async  :refer (<! >! put! chan)]
@@ -11,18 +11,11 @@
 
 ;;;; Logging config
 
-;; (sente/set-logging-level! :trace) ; Uncomment for more logging
-;;;; Packer (client<->server serializtion format) config
-(def packer (sente-transit/get-flexi-packer :edn))
-;; (def packer :edn) ; Default packer (no need for Transit dep)
-
 (debugf "ClojureScript appears to have loaded correctly.")
-(let [rand-chsk-type (if (>= (rand) 0.5) :ajax :auto)
-
-      {:keys [chsk ch-recv send-fn state]}
-      (sente/make-channel-socket! "/chsk" ; Note the same URL as before
-                                  {:type   rand-chsk-type})]
-  (debugf "Randomly selected chsk type: %s" rand-chsk-type)
+(let [{:keys [chsk ch-recv send-fn state]}
+      (sente/make-channel-socket! "/chsk" {:type :auto})]
+  (def packer (sente-transit/get-flexi-packer :edn))
+  (def router_ (atom nil))
   (def chsk       chsk)
   (def ch-chsk    ch-recv) ; ChannelSocket's receive channel
   (def chsk-send! send-fn) ; ChannelSocket's send API fn
@@ -57,6 +50,13 @@
     (debugf "Handshake: %s" ?data)))
 
 ;; Add your (defmethod handle-event-msg! <event-id> [ev-msg] <body>)s here...
+
+(defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
+(defn init-websocket []
+  (stop-router!)
+  (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
+
+;;(init-websocket)
 
 
 ;;;; Client-side UI
@@ -127,15 +127,3 @@
                      (fn [ev]
                        (debugf "Checking server id!")
                        (chsk-send! [:user/chkid {:had-a-callback? "expected"}] 5000 (fn [cb-reply] (debugf "Callback reply: %s" cb-reply))))))
-
-(def router_ (atom nil))
-(defn stop-router! [] (when-let [stop-f @router_] (stop-f)))
-(defn start-router! []
-  (stop-router!)
-  (reset! router_ (sente/start-chsk-router! ch-chsk event-msg-handler*)))
-
-
-(defn start! []
-  (start-router!))
-
-(start!)

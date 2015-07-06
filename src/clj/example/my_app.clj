@@ -180,4 +180,3 @@
 ;;;; Datomic testing
 
 (def conn (:conn (:datomic-db system)))
-(def db (d/db conn))
