@@ -17,5 +17,3 @@
        [:button#btn2 {:on-click #(test-sente-callback)} "Sente Callback button"]
        [:a {:href "#/home"} "Click me to render the homepage!"]
        ])))
-
-       ;;(debugf (:csrf-token @chsk-state))

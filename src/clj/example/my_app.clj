@@ -86,8 +86,8 @@
       slurp))
 
 (defroutes my-routes
-  (GET  "/"      req (landing-pg-handler req))
-  (GET "/index" req (index-pg-handler req))
+  (GET  "/"      req (index-pg-handler req))
+  (GET "/landing" req (landing-pg-handler req))
   (GET  "/chsk"  req ((:ring-ajax-get-or-ws-handshake (:sente system)) req))
   (POST "/chsk"  req ((:ring-ajax-post (:sente system)) req))
   (POST "/login" req (login! req))
