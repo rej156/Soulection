@@ -3,6 +3,7 @@
 .nrepl-port
 target/
 data/
+out/
 *.*~
 *.*#
 # Elastic Beanstalk Files
