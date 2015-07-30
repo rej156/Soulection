@@ -1,4 +1,4 @@
-* Sente example app
+* Soulection
 ** How to setup?
 
 Install boot, maven, datomic transactor jar locally via maven.
@@ -15,3 +15,4 @@ $ boot dev
 #+END_SRC
 
 Then point your browser to [[http://localhost:30]]00
+Run (start-repl) to start a cljs-repl once you've connected to the app from your browser!
