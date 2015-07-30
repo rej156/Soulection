@@ -1,8 +1,7 @@
 * Sente example app
 ** How to setup?
 
-Install boot, maven, boot-datomic locally to maven, datomic transactor jar
-locally via maven.
+Install boot, maven, datomic transactor jar locally via maven.
 
 ** What is this?
 
