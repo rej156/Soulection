@@ -11,7 +11,8 @@
      [datomic.api :as d]
      [org.httpkit.server :as http-kit]
      [reloaded.repl :refer [system]]
-     )
+     [example.verify-email :refer [verify-email]]
+     [example.download-form :refer [download-form]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -21,33 +22,14 @@
 
 ;;;; Server-side setup
 
-
-(defn download-form [req]
-  (let [{{artist :artist album :album} :params} req]
-    (hiccup/html5
-     [:h1 (str "Soulection Download for Louie Lastic")]
-     [:hr]
-     (form-to [:post "/louielastic"]
-              (anti-forgery-field)
-              (email-field {:placeholder "Email Address"} "email")
-              (submit-button "Submit"))
-     )))
-
-(defn verify-email [req]
-  (let [{{artist :artist album :album email :email} :params} req]
-    (hiccup/html5
-     [:h1 email])))
-
 (defn index-pg-handler [req]
   (-> "index.html"
       io/resource
       slurp))
 
-
 (defroutes my-routes
   (GET "/louielastic" req (download-form req))
   (POST "/louielastic" req (verify-email req))
-
   (route/not-found "<h1>Page not found</h1>"))
 
 (def my-ring-handler

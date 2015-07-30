@@ -38,7 +38,9 @@
    ;;; Transit deps optional; may be used to aid perf. of larger data payloads
    ;;; (see reference example for details):
                  [com.cognitect/transit-clj  "0.8.275"]
-                 [com.cognitect/transit-cljs "0.8.220"]])
+                 [com.cognitect/transit-cljs "0.8.220"]
+                 [clojurewerkz/mailer "1.2.0"]
+                 ])
 
 (require
  '[adzerk.boot-cljs      :refer [cljs]]
