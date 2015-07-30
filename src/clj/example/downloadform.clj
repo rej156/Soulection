@@ -1,4 +1,4 @@
-(ns example.download-form
+(ns example.downloadform
   (:require
    [hiccup.core        :as hiccup])
   (:use [hiccup.form]
@@ -6,7 +6,7 @@
 
 (defn download-form [req]
   (let [{{artist :artist album :album} :params} req]
-    (hiccup/html5
+    (hiccup/html
      [:h1 (str "Soulection Download for Louie Lastic")]
      [:hr]
      (form-to [:post "/louielastic"]

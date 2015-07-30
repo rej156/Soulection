@@ -8,11 +8,10 @@
      [hiccup.core        :as hiccup]
      [clojure.core.async :as async  :refer (<! <!! >! >!! put! chan go go-loop)]
      [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
-     [datomic.api :as d]
      [org.httpkit.server :as http-kit]
      [reloaded.repl :refer [system]]
-     [example.verify-email :refer [verify-email]]
-     [example.download-form :refer [download-form]])
+     [example.verifyemail :refer [verify-email]]
+     [example.downloadform :refer [download-form]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -41,5 +40,3 @@
 
     (ring.middleware.defaults/wrap-defaults my-routes ring-defaults-config)))
 ;;;; Datomic testing
-
-(def conn (:conn (:datomic-db system)))

@@ -40,6 +40,7 @@
                  [com.cognitect/transit-clj  "0.8.275"]
                  [com.cognitect/transit-cljs "0.8.220"]
                  [clojurewerkz/mailer "1.2.0"]
+                 [buddy/buddy-hashers "0.6.0"]
                  ])
 
 (require
@@ -57,13 +58,18 @@
   []
   (comp
    (environ :env {:http-port 3000
-                 :db-url "datomic:dev://localhost:4334/soulection"
+                  :db-url "datomic:dev://localhost:4334/soulection"
+                  :email-host "email-smtp.us-east-1.amazonaws.com"
+                  :email-port 25
+                  :email-username "AKIAIGBRJ5MDJIJIWE2Q"
+                  :email-password "Ak6PyH5suSNjwfO1K2nXhRiCRfK8Me69uXO6FQP7mDN4"
+                  :app-host "http://localhost:3000"
                  })
    (datomic :license-key "Grh/3Awg3nZwCMtgXmcp24WpK4N1GdF5e/nMvi66bOkTysUpDwYejShryL+9TAUU5PYYBBye0tHI+gr7WEHGEcPeSp2YZNdAYsJmgP6MH/5Njzj24s0ixytQifVVUIbC05N+bvyhXzWC3NXcpUkslDfYVbV4KWhtDTQbolXhUZvG573AfzVP//tpRG3yqzakI+GtEMVjBe2gqCQXtBC1YZxW9RzzLofYSdBIuvDrEq1OgxN5AKdRPiZZZIrIMr9wCuCuEy5BE/q6AfVp1XKgK1CKJBHEfYkG3NTKtfDXvzWF8fzWoqfHubiuvi69PCiJDKh0c/ztd2lhkXi7Qkddpw==")
    (watch)
    (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])
    ;;(cljs-repl)
-   (reload :on-jsload 'example.app/init)
+   ;;(reload :on-jsload 'example.app/init)
    ;;(cljs :optimizations :none :unified-mode true :source-map true)
    (repl :server true)
    ))

@@ -1,0 +1,23 @@
+[
+  {:db/id #db/id[:db.part/db]
+   :db/ident :account/email
+   :db/valueType :db.type/string
+   :db/cardinality :db.cardinality/one
+   :db/fulltext true
+   :db/doc "Email address of a user"
+   :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :account/verified
+   :db/valueType :db.type/bigint
+   :db/cardinality :db.cardinality/one
+   :db/doc "User's account verification status"
+   :db.install/_attribute :db.part/db}
+
+  {:db/id #db/id[:db.part/db]
+   :db/ident :account/hash
+   :db/valueType :db.type/string
+   :db/cardinality :db.cardinality/one
+   :db/doc "User's unique generated hash for verification"
+   :db.install/_attribute :db.part/db}
+]
