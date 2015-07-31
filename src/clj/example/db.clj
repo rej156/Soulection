@@ -37,10 +37,10 @@
 
 (defn get-email-hash [email]
   (-> (d/q '[:find [(pull ?e [:account/hash]) ...]
-         :in $ ?email
-         :where
-         [?e :account/hash ?hash]
-         [?e :account/email ?email]]
+             :in $ ?email
+             :where
+             [?e :account/hash ?hash]
+             [?e :account/email ?email]]
            (db) email)
       (first)
       :account/hash))
@@ -48,16 +48,31 @@
 ;;(get-email-hash "lol@test.com")
 (defn get-email-by-hash [hash]
   (-> (d/q '[:find [(pull ?e [:account/email]) ...]
-         :in $ ?hash
-         :where
-         [?e :account/email ?email]
-         [?e :account/hash ?hash]]
+             :in $ ?hash
+             :where
+             [?e :account/email ?email]
+             [?e :account/hash ?hash]]
            (db) hash)
       (first)
       :account/email))
 
-;; (get-email-by-hash (-> (get-email-hash "myemail@shazam.com")
-;;                        first
-;;                        :account/hash))
+(defn verify-email-with-hash [email hash]
+  (let [account (-> (d/q '[:find ?e
+                           :in $ ?email ?hash
+                           :where
+                           [?e :account/email ?email]
+                           [?e :account/hash ?hash]]
+                         (db) email hash)
+                    (ffirst))]
+    (-> (d/transact
+         conn
+         [{:db/id account
+           :account/verified 1}]))))
 
-;;(create-account "myemail@shazam.com")
+(defn verification-status-for-email [email]
+  (d/q '[:find ?verified
+         :in $ ?email
+         :where
+         [?e :account/email ?email]
+         [?e :account/verified ?verified]]
+       (db) email))
