@@ -3,7 +3,8 @@
             [clojurewerkz.mailer.core :refer [delivery-mode! with-settings
                                               with-defaults with-settings build-email deliver-email with-delivery-mode]]
             [environ.core :refer [env]]
-            [example.db :refer [verify-email-with-hash]])
+            [example.db :refer [verify-email-with-hash]]
+            [example.sendalbum :refer [send-album-url-via-email ]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -11,8 +12,6 @@
   (let [{{email :email hash :hash} :params} req]
     (if (verify-email-with-hash email hash)
       (hiccup/html
-       (hiccup/html
-        [:h1 "Verified "]
-        [:h1 email]))
+       [:p (send-album-url-via-email)])
       (hiccup/html
        [:h1 "Unable to verify"]))))

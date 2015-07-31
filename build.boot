@@ -41,6 +41,7 @@
                  [com.cognitect/transit-cljs "0.8.220"]
                  [clojurewerkz/mailer "1.2.0"]
                  [buddy/buddy-hashers "0.6.0"]
+                 [amazonica "0.3.29"]
                  ])
 
 (require
