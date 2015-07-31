@@ -30,7 +30,10 @@
    [{:db/id (d/tempid :db.part/user)
      :account/email email
      :account/verified 0
-     :account/hash (hashers/encrypt (str (rand-int 1000)))}]))
+     :account/hash (hashers/encrypt
+                    (str (rand-int 1000))
+                    {:algorithm :md5})}]))
+;;(create-account "lol@test.com")
 
 (defn get-email-hash [email]
   (d/q '[:find ?hash
@@ -38,6 +41,7 @@
          :where
          [?e :account/hash ?hash]
          [?e :account/email ?email]]
-       (db) "ericjohnjuta@gmail.com"))
+       (db) email))
 
-(get-email-hash "ericjohnjuta@gmail.com")
+;;(get-email-hash "ericjohnjuta@gmail.com")
+;;(get-email-hash "lol@test.com")
