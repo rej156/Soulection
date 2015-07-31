@@ -30,7 +30,7 @@
 (defroutes my-routes
   (GET "/louielastic" req (download-form req))
   (POST "/louielastic" req (sendconfirmation-email req))
-  (GET "/verifyemail" req (verify-email req))
+  (GET "/verifyemail/:email" req (verify-email req))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def my-ring-handler

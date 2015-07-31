@@ -36,12 +36,28 @@
 ;;(create-account "lol@test.com")
 
 (defn get-email-hash [email]
-  (d/q '[:find ?hash
+  (-> (d/q '[:find [(pull ?e [:account/hash]) ...]
          :in $ ?email
          :where
          [?e :account/hash ?hash]
          [?e :account/email ?email]]
-       (db) email))
+           (db) email)
+      (first)
+      :account/hash))
 
-;;(get-email-hash "ericjohnjuta@gmail.com")
 ;;(get-email-hash "lol@test.com")
+(defn get-email-by-hash [hash]
+  (-> (d/q '[:find [(pull ?e [:account/email]) ...]
+         :in $ ?hash
+         :where
+         [?e :account/email ?email]
+         [?e :account/hash ?hash]]
+           (db) hash)
+      (first)
+      :account/email))
+
+;; (get-email-by-hash (-> (get-email-hash "myemail@shazam.com")
+;;                        first
+;;                        :account/hash))
+
+;;(create-account "myemail@shazam.com")

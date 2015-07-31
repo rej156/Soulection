@@ -7,5 +7,8 @@
         [ring.util.anti-forgery]))
 
 (defn verify-email [req]
-  (hiccup/html
-   [:h1 "lol"]))
+  (let [{{email :email hash :hash} :params} req]
+    (hiccup/html
+     (hiccup/html
+      [:h1 email]
+      [:h1 hash]))))

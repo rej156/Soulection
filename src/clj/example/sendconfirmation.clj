@@ -3,7 +3,7 @@
             [clojurewerkz.mailer.core :refer [delivery-mode! with-settings
                                               with-defaults with-settings build-email deliver-email with-delivery-mode]]
             [environ.core :refer [env]]
-            [example.db :refer [get-email-hash]])
+            [example.db :refer [get-email-hash create-account]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -20,14 +20,14 @@
     (with-delivery-mode :smtp
       (deliver-email {:from "ericjohnjuta@gmail.com" :to "Eric <ericjohnjuta@gmail.com>"}
                      "email/templates/verification-email.mustache"
-                     {:app-host (env :app-host)
-                      :verification-url (verification-url email)}
+                     {:verification-url (verification-url email)}
                      :text/html))))
 
 (defn sendconfirmation-email [req]
   (let [{{artist :artist album :album email :email} :params} req]
-    (hiccup/html
-     (send-verification-email email))))
+  (create-account email)
+  (hiccup/html
+    (send-verification-email email))))
 
 
 

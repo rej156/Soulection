@@ -60,7 +60,7 @@
    (environ :env {:http-port 3000
                   :db-url "datomic:dev://localhost:4334/soulection"
                   :email-host "email-smtp.us-east-1.amazonaws.com"
-                  :email-port 25
+                  :email-port 587
                   :email-username "AKIAIGBRJ5MDJIJIWE2Q"
                   :email-password "Ak6PyH5suSNjwfO1K2nXhRiCRfK8Me69uXO6FQP7mDN4"
                   :app-host "http://localhost:3000"
