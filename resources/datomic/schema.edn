@@ -9,7 +9,7 @@
 
   {:db/id #db/id[:db.part/db]
    :db/ident :account/verified
-   :db/valueType :db.type/bigint
+   :db/valueType :db.type/long
    :db/cardinality :db.cardinality/one
    :db/doc "User's account verification status"
    :db.install/_attribute :db.part/db}

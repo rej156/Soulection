@@ -10,8 +10,9 @@
      [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
      [org.httpkit.server :as http-kit]
      [reloaded.repl :refer [system]]
-     [example.verifyemail :refer [verify-email]]
-     [example.downloadform :refer [download-form]])
+     [example.sendconfirmation :refer [sendconfirmation-email]]
+     [example.downloadform :refer [download-form]]
+     [example.verifyemail :refer [verify-email]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -28,7 +29,8 @@
 
 (defroutes my-routes
   (GET "/louielastic" req (download-form req))
-  (POST "/louielastic" req (verify-email req))
+  (POST "/louielastic" req (sendconfirmation-email req))
+  (GET "/verifyemail" req (verify-email req))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def my-ring-handler
