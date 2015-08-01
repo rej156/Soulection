@@ -42,6 +42,7 @@
                  [clojurewerkz/mailer "1.2.0"]
                  [buddy/buddy-hashers "0.6.0"]
                  [amazonica "0.3.29"]
+                 [clj-time "0.10.0"]
                  ])
 
 (require
@@ -65,6 +66,9 @@
                   :email-username "AKIAIGBRJ5MDJIJIWE2Q"
                   :email-password "Ak6PyH5suSNjwfO1K2nXhRiCRfK8Me69uXO6FQP7mDN4"
                   :app-host "http://localhost:3000"
+                  :aws-access-key "AKIAJTH2GNJYLPR3MTCQ"
+                  :aws-secret-key "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"
+                  :aws-endpoint "s3.amazonaws.com"
                  })
    (datomic :license-key "Grh/3Awg3nZwCMtgXmcp24WpK4N1GdF5e/nMvi66bOkTysUpDwYejShryL+9TAUU5PYYBBye0tHI+gr7WEHGEcPeSp2YZNdAYsJmgP6MH/5Njzj24s0ixytQifVVUIbC05N+bvyhXzWC3NXcpUkslDfYVbV4KWhtDTQbolXhUZvG573AfzVP//tpRG3yqzakI+GtEMVjBe2gqCQXtBC1YZxW9RzzLofYSdBIuvDrEq1OgxN5AKdRPiZZZIrIMr9wCuCuEy5BE/q6AfVp1XKgK1CKJBHEfYkG3NTKtfDXvzWF8fzWoqfHubiuvi69PCiJDKh0c/ztd2lhkXi7Qkddpw==")
    (watch)

@@ -1,14 +1,13 @@
 (ns example.sendconfirmation
   (:require [hiccup.core        :as hiccup]
-            [clojurewerkz.mailer.core :refer [delivery-mode! with-settings
-                                              with-defaults with-settings build-email deliver-email with-delivery-mode]]
+            [clojurewerkz.mailer.core :refer [with-settings deliver-email with-delivery-mode]]
             [environ.core :refer [env]]
-            [example.db :refer [get-email-hash create-account]])
+            [example.db :refer [get-hash-by-email create-account]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
 (defn verification-url [email]
-  (str (env :app-host) "/verifyemail/" email "?hash=" (get-email-hash email)))
+  (str (env :app-host) "/verifyemail/" email "?hash=" (get-hash-by-email email)))
 
 (defn send-verification-email [email]
   (with-settings {:host (env :email-host)
@@ -18,7 +17,7 @@
                   :tls true
                   }
     (with-delivery-mode :smtp
-      (deliver-email {:from "ericjohnjuta@gmail.com" :to "Eric <ericjohnjuta@gmail.com>"}
+      (deliver-email {:from "ericjohnjuta@gmail.com" :to email}
                      "email/templates/verification-email.mustache"
                      {:verification-url (verification-url email)}
                      :text/html))))
@@ -28,6 +27,10 @@
   (create-account email)
   (hiccup/html
     (send-verification-email email))))
+
+;;(sendconfirmation-email "lolol@msaail.com")
+(boot.core/load-data-readers!)
+;;(get-hash-by-email "ericjohnjuta@gmail.com")
 
 
 

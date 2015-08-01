@@ -6,6 +6,7 @@
    [buddy.hashers :as hashers]
    [environ.core :refer [env]]))
 
+
 (def schema
   (delay
    (read-string
@@ -14,8 +15,6 @@
 (def conn (:conn (:datomic-db system)))
 (defn db [] (d/db conn))
 
-(boot.core/load-data-readers!)
-
 (defn create-schema []
   (d/transact
    conn
@@ -23,6 +22,7 @@
 
 (defn delete-db []
   (d/delete-database (env :db-url)))
+;;(delete-db)
 
 (defn create-account [email]
   (d/transact
@@ -31,48 +31,52 @@
      :account/email email
      :account/verified 0
      :account/hash (hashers/encrypt
-                    (str (rand-int 1000))
-                    {:algorithm :md5})}]))
+                    (str (rand-int 1000)))}]))
 ;;(create-account "lol@test.com")
 
-(defn get-email-hash [email]
-  (-> (d/q '[:find [(pull ?e [:account/hash]) ...]
-             :in $ ?email
-             :where
-             [?e :account/hash ?hash]
-             [?e :account/email ?email]]
-           (db) email)
-      (first)
-      :account/hash))
+(defn get-hash-by-email [email]
+  (->> (d/q '[:find ?hash
+              :in $ ?email
+              :where
+              [?e :account/hash ?hash]
+              [?e :account/email ?email]]
+            (db) email)
+       ffirst))
 
-;;(get-email-hash "lol@test.com")
+(def my-hash (get-hash-by-email "ericjohnjuta@gmail.com"))
+
 (defn get-email-by-hash [hash]
-  (-> (d/q '[:find [(pull ?e [:account/email]) ...]
-             :in $ ?hash
-             :where
-             [?e :account/email ?email]
-             [?e :account/hash ?hash]]
-           (db) hash)
-      (first)
-      :account/email))
+  (->> (d/q '[:find ?email
+              :in $ ?hash
+              :where
+              [?e :account/email ?email]
+              [?e :account/hash ?hash]]
+            (db) hash)
+       ffirst))
 
 (defn verify-email-with-hash [email hash]
-  (let [account (-> (d/q '[:find ?e
-                           :in $ ?email ?hash
-                           :where
-                           [?e :account/email ?email]
-                           [?e :account/hash ?hash]]
-                         (db) email hash)
-                    (ffirst))]
+  (let [account (->> (d/q '[:find ?e
+                            :in $ ?email ?hash
+                            :where
+                            [?e :account/email ?email]
+                            [?e :account/hash ?hash]]
+                          (db) email hash)
+                     ffirst)]
     (-> (d/transact
          conn
          [{:db/id account
            :account/verified 1}]))))
 
 (defn verification-status-for-email [email]
-  (d/q '[:find ?verified
-         :in $ ?email
-         :where
-         [?e :account/email ?email]
-         [?e :account/verified ?verified]]
-       (db) email))
+  (->> (d/q '[:find ?verified
+              :in $ ?email
+              :where
+              [?e :account/email ?email]
+              [?e :account/verified ?verified]]
+            (db) email)
+       ffirst))
+
+(boot.core/load-data-readers!)
+
+;;(verification-status-for-email "ericjohnjuta@gmail.com")
+;;(verify-email-with-hash "ericjohnjuta@gmail.com" (get-email-hash "ericjohnjuta@gmail.com"))
