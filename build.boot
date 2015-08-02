@@ -83,7 +83,7 @@
 (deftask prod []
   (comp
    (environ :env {:http-port 8080
-                  :db-url "datomic:dev://localhost:4334/soulection"
+                  :db-url "datomic:ddb://us-east-1/datomic/soulection?aws_secret_key=JCnRJpWbEKizXR6m1Fe7uN/rgmywl1OQKtP2nblV&aws_access_key_id=AKIAJTH2GNJYLPR3MTCQ"
                   :email-host "email-smtp.us-east-1.amazonaws.com"
                   :email-port 587
                   :email-username "AKIAIGBRJ5MDJIJIWE2Q"
@@ -93,7 +93,7 @@
                   :aws-secret-key "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"
                   :aws-endpoint "s3.amazonaws.com"
                   })
-   (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])))
+   (system :sys #'prod-system :auto-start true :hot-reload true :files ["my_app.clj"])))
 
 (deftask deploy-env []
   (comp
