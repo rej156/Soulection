@@ -8,7 +8,7 @@
                  [adzerk/boot-reload    "0.2.6"      :scope "test"]
                  [adzerk/boot-cljs-repl "0.1.10-SNAPSHOT" :scope "test"]
                  ;;Datomic deps, requires datomic transactor and boot-datomic to be installed locally via maven
-                 ;;[tailrecursion/boot-datomic     "0.1.0-SNAPSHOT"]
+                 [pleasetrythisathome/boot-datomic     "0.1.0-SNAPSHOT"]
                  [com.datomic/datomic-pro "0.9.5186"]
                  ;;[ch.qos.logback/logback-classic "1.0.1"]
 
