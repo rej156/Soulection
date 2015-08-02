@@ -12,6 +12,6 @@
   (let [{{email :email hash :hash} :params} req]
     (if (verify-email-with-hash email hash)
       (hiccup/html
-       [:p (send-album-url-via-email)])
+       [:p (send-album-url-via-email email)])
       (hiccup/html
        [:h1 "Unable to verify"]))))

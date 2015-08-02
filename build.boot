@@ -8,7 +8,7 @@
                  [adzerk/boot-reload    "0.2.6"      :scope "test"]
                  [adzerk/boot-cljs-repl "0.1.10-SNAPSHOT" :scope "test"]
                  ;;Datomic deps, requires datomic transactor and boot-datomic to be installed locally via maven
-                 [tailrecursion/boot-datomic     "0.1.0-SNAPSHOT"]
+                 ;;[tailrecursion/boot-datomic     "0.1.0-SNAPSHOT"]
                  [com.datomic/datomic-pro "0.9.5186"]
                  ;;[ch.qos.logback/logback-classic "1.0.1"]
 
@@ -43,14 +43,16 @@
                  [buddy/buddy-hashers "0.6.0"]
                  [amazonica "0.3.29"]
                  [clj-time "0.10.0"]
+                 [adzerk/boot-beanstalk "0.7.0"]
                  ])
 
 (require
+ '[adzerk.boot-beanstalk      :refer [beanstalk dockerrun]]
  '[adzerk.boot-cljs      :refer [cljs]]
  '[adzerk.boot-reload    :refer [reload]]
  '[adzerk.boot-cljs-repl :refer [cljs-repl start-repl]]
  '[reloaded.repl :refer [init start stop go reset]]
- '[example.systems :refer [dev-system]]
+ '[example.systems :refer [dev-system prod-system]]
  '[danielsz.boot-environ :refer [environ]]
  '[tailrecursion.boot-datomic :refer [datomic]]
  '[system.boot :refer [system run]])
@@ -76,7 +78,46 @@
    ;;(cljs-repl)
    ;;(reload :on-jsload 'example.app/init)
    ;;(cljs :optimizations :none :unified-mode true :source-map true)
-   (repl :server true)
-   ))
+   (repl :server true)))
 
-;;Must create prod boot task with prod-system
+(deftask prod []
+  (comp
+   (environ :env {:http-port 8080
+                  :db-url "datomic:dev://localhost:4334/soulection"
+                  :email-host "email-smtp.us-east-1.amazonaws.com"
+                  :email-port 587
+                  :email-username "AKIAIGBRJ5MDJIJIWE2Q"
+                  :email-password "Ak6PyH5suSNjwfO1K2nXhRiCRfK8Me69uXO6FQP7mDN4"
+                  :app-host "http://soulection-download.elasticbeanstalk.com"
+                  :aws-access-key "AKIAJTH2GNJYLPR3MTCQ"
+                  :aws-secret-key "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"
+                  :aws-endpoint "s3.amazonaws.com"
+                  })
+   (system :sys #'dev-system :auto-start true :hot-reload true :files ["my_app.clj"])))
+
+(deftask deploy-env []
+  (comp
+   (task-options!
+    beanstalk {:name           "Soulection-Download"
+               :env            "Soulection-Download"
+               :version        "0.1.0-SNAPSHOT"
+               :description    "Soulection email album download"
+               :access-key     "AKIAJTH2GNJYLPR3MTCQ"
+               :secret-key     "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"
+               :stack-name "64bit Amazon Linux 2015.03 v1.4.3 running Docker 1.6.2"
+               :beanstalk-envs [{;; name must be unique in AWS account
+                                 :name "soulection-download"
+                                 ;; http://<cname-prefix>.elasticbeanstalk.com
+                                 :cname-prefix "soulection-download"}]})
+   identity))
+
+(deftask build-docker []
+  (comp
+   (add-repo)
+   (dockerrun)
+   (zip)))
+
+(deftask deploy-app []
+  (comp
+   (deploy-env)
+   identity))

@@ -41,4 +41,3 @@
             )]
 
     (ring.middleware.defaults/wrap-defaults my-routes ring-defaults-config)))
-;;;; Datomic testing

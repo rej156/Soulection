@@ -32,6 +32,7 @@
      :account/verified 0
      :account/hash (hashers/encrypt
                     (str (rand-int 1000)))}]))
+
 ;;(create-account "lol@test.com")
 
 (defn get-hash-by-email [email]
@@ -43,7 +44,7 @@
             (db) email)
        ffirst))
 
-(def my-hash (get-hash-by-email "ericjohnjuta@gmail.com"))
+;;(def my-hash (get-hash-by-email "ericjohnjuta@gmail.com"))
 
 (defn get-email-by-hash [hash]
   (->> (d/q '[:find ?email
@@ -54,18 +55,23 @@
             (db) hash)
        ffirst))
 
+(defn get-account-id-with-hash-and-email [email hash]
+  (->> (d/q '[:find ?e
+              :in $ ?email ?hash
+              :where
+              [?e :account/email ?email]
+              [?e :account/hash ?hash]]
+            (db) email hash)
+       ffirst))
+
+;;(get-account-id-with-hash-and-email "lol@test.com" (get-hash-by-email "lol@test.com"))
+
 (defn verify-email-with-hash [email hash]
-  (let [account (->> (d/q '[:find ?e
-                            :in $ ?email ?hash
-                            :where
-                            [?e :account/email ?email]
-                            [?e :account/hash ?hash]]
-                          (db) email hash)
-                     ffirst)]
-    (-> (d/transact
-         conn
-         [{:db/id account
-           :account/verified 1}]))))
+  (let [account (get-account-id-with-hash-and-email email hash)]
+    (d/transact
+     conn
+     [{:db/id account
+       :account/verified 1}])))
 
 (defn verification-status-for-email [email]
   (->> (d/q '[:find ?verified
@@ -76,7 +82,6 @@
             (db) email)
        ffirst))
 
-(boot.core/load-data-readers!)
 
+(boot.core/load-data-readers!)
 ;;(verification-status-for-email "ericjohnjuta@gmail.com")
-;;(verify-email-with-hash "ericjohnjuta@gmail.com" (get-email-hash "ericjohnjuta@gmail.com"))

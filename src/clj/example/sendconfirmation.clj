@@ -6,11 +6,14 @@
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
+(boot.core/load-data-readers!)
+
 (defn verification-url [email]
   (str (env :app-host) "/verifyemail/" email "?hash=" (get-hash-by-email email)))
 
 (defn send-verification-email [email]
-  (with-settings {:host (env :email-host)
+  (let [verification-url (verification-url email)]
+    (with-settings {:host (env :email-host)
                   :user (env :email-username)
                   :pass (env :email-password)
                   :port (env :email-port)
@@ -19,8 +22,8 @@
     (with-delivery-mode :smtp
       (deliver-email {:from "ericjohnjuta@gmail.com" :to email}
                      "email/templates/verification-email.mustache"
-                     {:verification-url (verification-url email)}
-                     :text/html))))
+                     {:verification-url verification-url}
+                     :text/html)))))
 
 (defn sendconfirmation-email [req]
   (let [{{artist :artist album :album email :email} :params} req]
@@ -29,7 +32,7 @@
     (send-verification-email email))))
 
 ;;(sendconfirmation-email "lolol@msaail.com")
-(boot.core/load-data-readers!)
+
 ;;(get-hash-by-email "ericjohnjuta@gmail.com")
 
 
