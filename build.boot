@@ -79,7 +79,8 @@
                   :aws-secret-key "JCnRJpWbEKizXR6m1Fe7uN/rgmywl1OQKtP2nblV"
                   :aws-endpoint "s3.amazonaws.com"
                   })
-   (system :sys #'prod-system :auto-start true :hot-reload false :files ["my_app.clj"])
+   (watch)
+   (system :sys #'prod-system :auto-start true :hot-reload true :files ["my_app.clj"])
    ;;(run :main-namespace "example.systems" :arguments [#'prod-system])
    ))
 
@@ -117,20 +118,6 @@
 
 (deftask deploy-app []
   (comp
-   (deploy-env)
-   identity))
+   (deploy-env)))
 
-(deftask build
-  "Builds an uberjar of this project that can be run with java -jar"
-  []
-  (comp
-   (prod)
-   (aot :namespace '#{example.systems})
-   (pom :project 'myproject
-        :version "1.0.0")
-   (uber)
-   (jar :main 'example.systems)))
-
-(defn -main [& args]
-  (require 'example.systems)
-  (apply (resolve 'example.systems/-main) args))
+(boot.core/load-data-readers!)

@@ -11,23 +11,11 @@
  (:gen-class))
 
 (defsystem dev-system
-  [:web (new-web-server (Integer. (env :http-port)) my-ring-handler)
-   :datomic-db (new-datomic-db (env :db-url))])
+  [:datomic-db (new-datomic-db (env :db-url))
+   :web (new-web-server (Integer. (env :http-port)) my-ring-handler)
+   ])
 
-;; (defsystem prod-system
-;;   [:web (new-web-server (Integer. (env :http-port)) my-ring-handler)
-;;    :datomic-db (new-datomic-db (env :db-url))])
-
-(defn prod-system []
-  "Assembles and returns components for an application in production"
-  []
-    (component/system-map
-     :datomic-db (new-datomic-db (env :db-url))
-     :web (new-web-server (env :http-port) my-ring-handler)))
-
-(defn -main
-  "Start a production system, unless a system is passed as argument (as in the dev-run task)."
-  [& args]
-  (let [system (or (first args) #'prod-system)]
-    (reloaded.repl/set-init! system)
-    (go)))
+(defsystem prod-system
+  [:datomic-db (new-datomic-db (env :db-url))
+   :web (new-web-server (Integer. (env :http-port)) my-ring-handler)
+   ])
