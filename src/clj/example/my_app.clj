@@ -7,7 +7,6 @@
      [compojure.route    :as route]
      [hiccup.core        :as hiccup]
      [clojure.core.async :as async  :refer (<! <!! >! >!! put! chan go go-loop)]
-     [taoensso.timbre    :as timbre :refer (tracef debugf infof warnf errorf)]
      [org.httpkit.server :as http-kit]
      [reloaded.repl :refer [system]]
      [example.sendconfirmation :refer [sendconfirmation-email]]
@@ -15,10 +14,6 @@
      [example.verifyemail :refer [verify-email]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
-
-;;;; Logging config
-
-;; (sente/set-logging-level! :trace) ; Uncomment for more logging
 
 ;;;; Server-side setup
 
