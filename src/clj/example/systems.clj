@@ -8,6 +8,7 @@
    [taoensso.sente.packers.transit :as sente-transit]
    [environ.core :refer [env]]
    [system.core :refer [defsystem]]
+   [com.stuartsierra.component :as component]
    (system.components
     [datomic :refer [new-datomic-db]]
     [http-kit :refer [new-web-server]])))
@@ -19,3 +20,8 @@
 (defsystem prod-system
   [:web (new-web-server (Integer. (env :http-port)) my-ring-handler)
    :datomic-db (new-datomic-db (env :db-url))])
+
+(defn -main 
+  "Start the application"
+  []
+  (alter-var-root #'prod-system component/start))

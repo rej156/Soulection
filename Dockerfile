@@ -3,6 +3,6 @@ FROM adzerk/boot-clj
 ADD . /app
 RUN cd /app
 
-WORKDIR /app
+WORKDIR /app/target
 EXPOSE 8080
-CMD ["prod"]
+CMD ["java", "-jar", "soulection-0.10.0-SNAPSHOT.jar"]

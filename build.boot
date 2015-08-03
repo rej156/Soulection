@@ -44,6 +44,7 @@
                  [amazonica "0.3.29"]
                  [clj-time "0.10.0"]
                  [adzerk/boot-beanstalk "0.7.0"]
+		 [com.stuartsierra/component "0.2.3"]
                  ])
 
 (require
@@ -111,13 +112,29 @@
                                  :cname-prefix "soulection-download"}]})
    identity))
 
+(deftask build-jar
+  "Builds an uberjar of this project that can be run with java -jar"
+  []
+  (comp
+   (aot :namespace '#{example.systems})
+   (pom :project 'soulection
+        :version "0.10.0-SNAPSHOT")
+   (uber)
+   (jar :main 'example.systems)
+   identity))
+
 (deftask build-docker []
   (comp
    (add-repo)
    (dockerrun)
+   (build-jar)
    (zip)))
 
 (deftask deploy-app []
   (comp
    (deploy-env)
    identity))
+
+(defn -main [& args]
+  (require 'example.systems)
+  (apply (resolve 'example.systems/-main) args))

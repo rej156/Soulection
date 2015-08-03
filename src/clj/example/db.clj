@@ -83,5 +83,5 @@
        ffirst))
 
 
-(boot.core/load-data-readers!)
+;;(boot.core/load-data-readers!)
 ;;(verification-status-for-email "ericjohnjuta@gmail.com")

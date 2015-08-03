@@ -6,7 +6,7 @@
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
-(boot.core/load-data-readers!)
+;;(boot.core/load-data-readers!)
 
 (defn verification-url [email]
   (str (env :app-host) "/verifyemail/" email "?hash=" (get-hash-by-email email)))
