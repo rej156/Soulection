@@ -6,18 +6,16 @@
    [buddy.hashers :as hashers]
    [environ.core :refer [env]]))
 
-
 (def schema
   (delay
    (read-string
     (slurp (io/resource "datomic/schema.edn")))))
 
-(def conn (:conn (:datomic-db system)))
-(defn db [] (d/db conn))
+(defn db [] (d/db (:conn (:datomic-db system))))
 
 (defn create-schema []
   (d/transact
-   conn
+   (:conn (:datomic-db system))
    @schema))
 
 (defn delete-db []
@@ -26,7 +24,7 @@
 
 (defn create-account [email]
   (d/transact
-   conn
+   (:conn (:datomic-db system))
    [{:db/id (d/tempid :db.part/user)
      :account/email email
      :account/verified 0
@@ -69,7 +67,7 @@
 (defn verify-email-with-hash [email hash]
   (let [account (get-account-id-with-hash-and-email email hash)]
     (d/transact
-     conn
+     (:conn (:datomic-db system))
      [{:db/id account
        :account/verified 1}])))
 

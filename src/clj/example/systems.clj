@@ -15,7 +15,9 @@
    :web (new-web-server (Integer. (env :http-port)) my-ring-handler)
    ])
 
-(defsystem prod-system
-  [:datomic-db (new-datomic-db (env :db-url))
-   :web (new-web-server (Integer. (env :http-port)) my-ring-handler)
-   ])
+(defn prod-system []
+  (-> (component/system-map
+       :datomic-db (new-datomic-db (env :db-url))
+       :web (new-web-server (Integer. (env :http-port)) my-ring-handler))
+      (component/system-using
+       {:web {:datomic-db :datomic-db}})))

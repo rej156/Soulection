@@ -68,7 +68,7 @@
 
 (deftask prod []
   (comp
-   (environ :env {:http-port 8080
+   (environ :env {:http-port 8081
                   :db-url "datomic:ddb://us-east-1/datomic/soulection?aws_secret_key=JCnRJpWbEKizXR6m1Fe7uN/rgmywl1OQKtP2nblV&aws_access_key_id=AKIAJTH2GNJYLPR3MTCQ"
                   :email-host "email-smtp.us-east-1.amazonaws.com"
                   :email-port 587
@@ -81,6 +81,7 @@
                   })
    (watch)
    (system :sys #'prod-system :auto-start true :hot-reload true :files ["my_app.clj"])
+   (repl :server true)
    ;;(run :main-namespace "example.systems" :arguments [#'prod-system])
    ))
 
