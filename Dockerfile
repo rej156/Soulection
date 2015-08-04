@@ -4,6 +4,6 @@ ADD . /app
 RUN cd /app
 
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["prod"]
