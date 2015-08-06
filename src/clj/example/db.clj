@@ -29,7 +29,8 @@
      :account/email email
      :account/verified 0
      :account/hash (hashers/encrypt
-                    (str (rand-int 1000)))}]))
+                    (str (rand-int 1000))
+                    {:algorithm :md5})}]))
 
 ;;(create-account "lol@test.com")
 
@@ -37,18 +38,17 @@
   (->> (d/q '[:find ?hash
               :in $ ?email
               :where
-              [?e :account/hash ?hash]
-              [?e :account/email ?email]]
+              [?e :account/email ?email]
+              [?e :account/hash ?hash]]
             (db) email)
        ffirst))
-
 
 (defn get-email-by-hash [hash]
   (->> (d/q '[:find ?email
               :in $ ?hash
               :where
-              [?e :account/email ?email]
-              [?e :account/hash ?hash]]
+              [?e :account/hash ?hash]
+              [?e :account/email ?email]]
             (db) hash)
        ffirst))
 
@@ -66,11 +66,10 @@
 (defn verify-email-with-hash [email hash]
   (let [account (get-account-id-with-hash-and-email email hash)]
     (if-not (nil? account)
-      @(d/transact
+      (d/transact
        (:conn (:datomic-db system))
        [{:db/id account
-         :account/verified 1}])
-      {})))
+         :account/verified 1}]))))
 
 (defn verification-status-for-email [email]
   (->> (d/q '[:find ?verified
@@ -89,4 +88,4 @@
        (db)))
 
 ;;(boot.core/load-data-readers!)
-;;(verification-status-for-email "ericjohnjuta@gmail.com")
+;;(verification-status-for-email "ericjohnjuta@yahoo.co.uk")

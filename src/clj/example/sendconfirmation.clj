@@ -28,8 +28,9 @@
 (defn sendconfirmation-email [req]
   (let [{{artist :artist album :album email :email} :params} req]
   (create-account email)
+  (send-verification-email email)
   (hiccup/html
-    (send-verification-email email))))
+   [:h1 "A verification link has been sent to your email!"])))
 
 ;;(sendconfirmation-email "lolol@msaail.com")
 
