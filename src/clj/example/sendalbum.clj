@@ -1,6 +1,6 @@
 (ns example.sendalbum
   (:require [environ.core :refer [env]]
-            [amazonica.core :refer [with-credential]]
+            [amazonica.core :refer [defcredential with-credential]]
             [clojurewerkz.mailer.core :refer [with-settings deliver-email with-delivery-mode]])
   (:use [amazonica.aws.s3]
         [amazonica.aws.s3transfer]

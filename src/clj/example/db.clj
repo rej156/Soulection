@@ -42,7 +42,6 @@
             (db) email)
        ffirst))
 
-;;(def my-hash (get-hash-by-email "ericjohnjuta@gmail.com"))
 
 (defn get-email-by-hash [hash]
   (->> (d/q '[:find ?email
@@ -66,10 +65,12 @@
 
 (defn verify-email-with-hash [email hash]
   (let [account (get-account-id-with-hash-and-email email hash)]
-    (d/transact
-     (:conn (:datomic-db system))
-     [{:db/id account
-       :account/verified 1}])))
+    (if-not (nil? account)
+      @(d/transact
+       (:conn (:datomic-db system))
+       [{:db/id account
+         :account/verified 1}])
+      {})))
 
 (defn verification-status-for-email [email]
   (->> (d/q '[:find ?verified
@@ -80,6 +81,12 @@
             (db) email)
        ffirst))
 
+(defn verified-account-emails []
+  (d/q '[:find ?email
+         :where
+         [?e :account/verified 1]
+         [?e :account/email ?email]]
+       (db)))
 
 ;;(boot.core/load-data-readers!)
 ;;(verification-status-for-email "ericjohnjuta@gmail.com")

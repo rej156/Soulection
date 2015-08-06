@@ -10,8 +10,9 @@
 
 (defn verify-email [req]
   (let [{{email :email hash :hash} :params} req]
-    (if (verify-email-with-hash email hash)
+    (if-not (empty? (verify-email-with-hash email hash))
       (hiccup/html
+       [:h1 "Your album link has been sent to your email."]
        [:p (send-album-url-via-email email)])
       (hiccup/html
        [:h1 "Unable to verify"]))))
