@@ -66,7 +66,7 @@
 (defn verify-email-with-hash [email hash]
   (let [account (get-account-id-with-hash-and-email email hash)]
     (if-not (nil? account)
-      (d/transact
+      (d/transact-async
        (:conn (:datomic-db system))
        [{:db/id account
          :account/verified 1}]))))

@@ -19,12 +19,10 @@
         (send-album-url-via-email email)
         (hiccup/html
          [:h1 "An album download link has been sent to your email!"]))
-      (let [account-id (get-account-id-with-hash-and-email email hash)]
-        (if-not (nil? account-id)
-          (do
-            (verify-email-with-hash email hash)
-            (send-album-url-via-email email)
-            (hiccup/html
-             [:h1 "An album download link has been sent to your email!"]))
+      (if (verify-email-with-hash email hash)
+        (do
+          (send-album-url-via-email email)
           (hiccup/html
-           [:h1 "Invalid verification link!"]))))))
+           [:h1 "An album download link has been sent to your email!"]))
+        (hiccup/html
+         [:h1 "Invalid verification link!"])))))
