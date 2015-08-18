@@ -22,7 +22,8 @@
                     :tls true
                     }
       (with-delivery-mode :smtp
-        (deliver-email {:from "ericjohnjuta@gmail.com" :to email}
+        (deliver-email {:from "ericjohnjuta@gmail.com" :to email
+                        :title "Download your Soulection album!"}
                        "email/templates/album-email.mustache"
                        {:album-url album-url}
                        :text/html)))))

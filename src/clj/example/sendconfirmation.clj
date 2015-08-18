@@ -21,7 +21,9 @@
                   :tls true
                   }
     (with-delivery-mode :smtp
-      (deliver-email {:from "ericjohnjuta@gmail.com" :to email}
+      (deliver-email {:from "ericjohnjuta@gmail.com" :to email :title
+  "Soulection - Verify
+  your email"}
                      "email/templates/verification-email.mustache"
                      {:verification-url verification-url}
                      :text/html)))))
