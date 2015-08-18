@@ -2,7 +2,8 @@
   (:require [hiccup.core        :as hiccup]
             [clojurewerkz.mailer.core :refer [with-settings deliver-email with-delivery-mode]]
             [environ.core :refer [env]]
-            [example.db :refer [get-hash-by-email create-account]])
+            [example.sendalbum :refer [send-album-url-via-email]]
+            [example.db :refer [get-hash-by-email create-account verification-status-for-email]])
   (:use [hiccup.form]
         [ring.util.anti-forgery]))
 
@@ -26,11 +27,18 @@
                      :text/html)))))
 
 (defn sendconfirmation-email [req]
-  (let [{{artist :artist album :album email :email} :params} req]
-  (create-account email)
-  (send-verification-email email)
-  (hiccup/html
-   [:h1 "A verification link has been sent to your email!"])))
+  (let [{{artist :artist album :album email :email} :params} req
+        account-verification-status (verification-status-for-email email)]
+    (if (= 1 account-verification-status)
+      (do
+        (send-album-url-via-email email)
+        (hiccup/html
+         [:h1 "An album download link has been sent to your email!"]))
+      (do
+        (create-account email)
+        (send-verification-email email)
+        (hiccup/html
+         [:h1 "A verification link has been sent to your email!"])))))
 
 ;;(sendconfirmation-email "lolol@msaail.com")
 
